@@ -4,26 +4,33 @@ using UnityEngine;
 public class UnitActionSystem : MonoBehaviour
 {
     public static UnitActionSystem Instance { get; private set; }
-    
+
     public event EventHandler OnSelectedUnitChanged;
-    
+
     [SerializeField] private Unit _selectedUnit;
     [SerializeField] private LayerMask _unitLayerMask;
+
+    private bool _isBusy;
 
     private void Awake()
     {
         if (Instance != null)
         {
-            Debug.LogError("There's more than one UnitActionSystem object! " + transform + " - " + Instance + ". ");    
+            Debug.LogError("There's more than one UnitActionSystem object! " + transform + " - " + Instance + ". ");
             Destroy(gameObject);
             return;
         }
-        
+
         Instance = this;
     }
 
     private void Update()
     {
+        if (_isBusy)
+        {
+            return;
+        }
+
         if (Input.GetMouseButton(0))
         {
             if (TryHandleUnitSelection()) return;
@@ -31,14 +38,26 @@ public class UnitActionSystem : MonoBehaviour
             GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition());
             if (_selectedUnit.GetMoveAction().IsValidActionGridPosition(mouseGridPosition))
             {
-                _selectedUnit.GetMoveAction().Move(mouseGridPosition);
+                SetBusy();
+                _selectedUnit.GetMoveAction().Move(mouseGridPosition, ClearBusy);
             }
         }
 
         if (Input.GetMouseButtonDown(1))
         {
-            _selectedUnit.GetSpinAction().Spin();
+            SetBusy();
+            _selectedUnit.GetSpinAction().Spin(ClearBusy);
         }
+    }
+
+    private void SetBusy()
+    {
+        _isBusy = true;
+    }
+
+    private void ClearBusy()
+    {
+        _isBusy = false;
     }
 
     private bool TryHandleUnitSelection()
@@ -59,7 +78,7 @@ public class UnitActionSystem : MonoBehaviour
     private void SetSelectedUnit(Unit unit)
     {
         _selectedUnit = unit;
-        
+
         OnSelectedUnitChanged?.Invoke(this, EventArgs.Empty);
     }
 

@@ -14,7 +14,7 @@ public class SpinAction : BaseAction
         {
             return;
         }
-        
+
         float spinAddAmount = 360f * Time.deltaTime;
         transform.eulerAngles += new Vector3(0, spinAddAmount, 0);
 
@@ -22,12 +22,13 @@ public class SpinAction : BaseAction
         if (_totalSpinAmount >= 360f)
         {
             IsActive = false;
+            onActionComplete();
         }
-
     }
 
-    public void Spin()
+    public void Spin(Action onActionComplete)
     {
+        this.onActionComplete = onActionComplete;
         IsActive = true;
         _totalSpinAmount = 0f;
     }

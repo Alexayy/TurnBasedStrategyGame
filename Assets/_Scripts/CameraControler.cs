@@ -7,7 +7,7 @@ public class CameraControler : MonoBehaviour
     private const float MAX_FOLLOW_Y_OFFSET = 12f;
 
     private CinemachineTransposer _cinemachineTransposer;
-    
+
     [SerializeField] private CinemachineVirtualCamera _cinemachineVirtualCamera;
 
     private Vector3 _targetFollowOffSet;

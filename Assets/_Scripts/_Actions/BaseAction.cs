@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace _Scripts._Actions
@@ -6,6 +7,7 @@ namespace _Scripts._Actions
     {
         protected Unit Unit;
         protected bool IsActive;
+        protected Action onActionComplete;
 
         protected virtual void Awake()
         {

@@ -7,7 +7,7 @@ using UnityEngine;
 public class GridSystemVisual : MonoBehaviour
 {
     public static GridSystemVisual Instance { get; private set; }
-    
+
     [SerializeField] private Transform _gridSystemVisualSinglePrefab;
 
     private GridSystemVisualSingle[,] _gridSystemVisualSingleArray;
@@ -74,9 +74,9 @@ public class GridSystemVisual : MonoBehaviour
     private void UpdateGridVisual()
     {
         HideAllGridPosition();
-        
+
         Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
-        
+
         Instance.ShowGridPositionList(selectedUnit.GetMoveAction().GetValidActionGridPositionList());
     }
 }

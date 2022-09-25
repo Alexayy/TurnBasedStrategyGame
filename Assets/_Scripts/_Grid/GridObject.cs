@@ -18,12 +18,12 @@ public class GridObject : MonoBehaviour
     public override string ToString()
     {
         string unitString = "";
-        
+
         foreach (Unit unit in _unitList)
         {
             unitString += unit + "\n";
         }
-        
+
         return _gridPosition.ToString() + "\n" + unitString;
     }
 
@@ -36,7 +36,7 @@ public class GridObject : MonoBehaviour
     {
         _unitList.Remove(unit);
     }
-    
+
     public List<Unit> GetUnitList()
     {
         return _unitList;
