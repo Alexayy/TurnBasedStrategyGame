@@ -1,43 +1,52 @@
 using System.Collections.Generic;
+using _Scripts._Actions;
 using UnityEngine;
 
-public class MoveAction : MonoBehaviour
+public class MoveAction : BaseAction
 {
     [SerializeField] private Animator _unitAnimator;
-    [SerializeField] private int _maxMoveDistance;
+    [SerializeField] private int _maxMoveDistance = 4;
     
     private Vector3 targetPosition;
-    private Unit _unit;
 
-    private void Awake()
+    protected override void Awake()
     {
-        _unit = GetComponent<Unit>();
+        base.Awake();
         targetPosition = transform.position;
     }
 
     private void Update()
     {
-        float stoppingDistance = 0.1f;
+        if (!IsActive)
+        {
+            return;
+        }
+
+        Vector3 moveDirection = (targetPosition - transform.position).normalized;
+
+        float stoppingDistance = .1f;
         if (Vector3.Distance(transform.position, targetPosition) > stoppingDistance)
         {
-            Vector3 moveDirection = (targetPosition - transform.position).normalized;
             float moveSpeed = 4f;
-            transform.position += moveDirection * moveSpeed * Time.deltaTime;
-
-            float rotateSpeed = 10f;
-            transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
+            transform.position += moveDirection * (moveSpeed * Time.deltaTime);
 
             _unitAnimator.SetBool("IsWalking", true);
         }
         else
         {
             _unitAnimator.SetBool("IsWalking", false);
+            IsActive = false;
+            // onActionComplete();
         }
+
+        float rotateSpeed = 10f;
+        transform.forward = Vector3.Slerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
     }
 
     public void Move(GridPosition gridPosition)
     {
         this.targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
+        IsActive = true;
     }
 
     public bool IsValidActionGridPosition(GridPosition gridPosition)
@@ -50,7 +59,7 @@ public class MoveAction : MonoBehaviour
     {
         List<GridPosition> validGridPositionList = new List<GridPosition>();
 
-        GridPosition unitGridPosition = _unit.GetGridPosition();
+        GridPosition unitGridPosition = Unit.GetGridPosition();
         for (int i = -_maxMoveDistance; i <= _maxMoveDistance; i++) // X AXIS!!!
         { 
             for (int j = -_maxMoveDistance; j <= _maxMoveDistance; j++) // Z AXIS!!!
