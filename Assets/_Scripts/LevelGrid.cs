@@ -9,18 +9,18 @@ public class LevelGrid : MonoBehaviour
 
     [SerializeField] private Transform _gridDebugObjectPrefab;
     private GridSystem _gridSystem;
-    
+
     private void Awake()
     {
         if (Instance != null)
         {
-            Debug.LogError("There's more than one UnitActionSystem object! " + transform + " - " + Instance + ". ");    
+            Debug.LogError("There's more than one UnitActionSystem object! " + transform + " - " + Instance + ". ");
             Destroy(gameObject);
             return;
         }
-        
+
         Instance = this;
-        
+
         _gridSystem = new GridSystem(10, 10, 2f);
         _gridSystem.CreateDebugObjects(_gridDebugObjectPrefab);
     }
@@ -48,6 +48,16 @@ public class LevelGrid : MonoBehaviour
         RemoveUnitAtGridPosition(fromGridPosition, unit);
         AddUnitAtGridPosition(toGridPosition, unit);
     }
-    
+
     public GridPosition GetGridPosition(Vector3 worldPosition) => _gridSystem.GetGridPosition(worldPosition);
+    public Vector3 GetWorldPosition(GridPosition gridPosition) => _gridSystem.GetWorldPosition(gridPosition);
+    public bool IsValidGridPosition(GridPosition gridPosition) => _gridSystem.IsValidGridPosition(gridPosition);
+    public int GetWidth() => _gridSystem.GetWidth();
+    public int GetHeight() => _gridSystem.GetHeight();
+
+    public bool HasAnyUnitOnThisGridPosition(GridPosition gridPosition)
+    {
+        GridObject gridObject = _gridSystem.GetGridObject(gridPosition);
+        return gridObject.HasAnyUnit();
+    }
 }
