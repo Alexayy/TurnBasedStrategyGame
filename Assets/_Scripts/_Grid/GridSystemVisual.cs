@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using _Scripts._Actions;
 using Cinemachine;
 using UnityEngine;
 
@@ -75,8 +76,8 @@ public class GridSystemVisual : MonoBehaviour
     {
         HideAllGridPosition();
 
-        Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
+        BaseAction selectedAction = UnitActionSystem.Instance.GetSelectedAction();
 
-        Instance.ShowGridPositionList(selectedUnit.GetMoveAction().GetValidActionGridPositionList());
+        Instance.ShowGridPositionList(selectedAction.GetValidActionGridPositionList());
     }
 }
