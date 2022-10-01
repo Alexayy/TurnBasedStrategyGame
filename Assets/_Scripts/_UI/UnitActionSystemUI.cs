@@ -4,6 +4,7 @@ using _Scripts._Actions;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class UnitActionSystemUI : MonoBehaviour
 {
@@ -23,7 +24,9 @@ public class UnitActionSystemUI : MonoBehaviour
         UnitActionSystem.Instance.OnSelectedUnitChanged += UnitActionSystem_OnselectedUnitChanged;
         UnitActionSystem.Instance.OnSelectedActionChanged += UnitActionSystem_OnselectedActionChanged;
         UnitActionSystem.Instance.OnActionStarted += UnitActionSystem_OnActionStarted;
-        
+        TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
+        Unit.OnAnyActionPointsChanged += Unit_OnAnyActionPointsChanged;
+
         UpdateActionPoints();
         CreateUnitActionButtons();
         UpdateSelectedVisual();
@@ -35,9 +38,9 @@ public class UnitActionSystemUI : MonoBehaviour
         {
             Destroy(buttonTransform.gameObject);
         }
-        
+
         _actionButtonList.Clear();
-        
+
         Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
 
         foreach (BaseAction baseAction in selectedUnit.GetBaseActionArray())
@@ -45,7 +48,7 @@ public class UnitActionSystemUI : MonoBehaviour
             Transform actionButtonTransform = Instantiate(_actionButtonPrefab, _actionButtonContainerTransform);
             ActionButtonUI actionButtonUI = actionButtonTransform.GetComponent<ActionButtonUI>();
             actionButtonUI.SetBaseAction(baseAction);
-            
+
             _actionButtonList.Add(actionButtonUI);
         }
     }
@@ -63,6 +66,16 @@ public class UnitActionSystemUI : MonoBehaviour
     }
 
     private void UnitActionSystem_OnActionStarted(object sender, EventArgs e)
+    {
+        UpdateActionPoints();
+    }
+
+    private void TurnSystem_OnTurnChanged(object sender, EventArgs e)
+    {
+        UpdateActionPoints();
+    }
+
+    private void Unit_OnAnyActionPointsChanged(object sender, EventArgs e)
     {
         UpdateActionPoints();
     }
