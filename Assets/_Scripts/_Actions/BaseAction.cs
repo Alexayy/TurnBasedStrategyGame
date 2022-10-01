@@ -26,5 +26,10 @@ namespace _Scripts._Actions
         }
 
         public abstract List<GridPosition> GetValidActionGridPositionList();
+
+        public virtual int GetActionPointsCost()
+        {
+            return 1;
+        }
     }
 }
