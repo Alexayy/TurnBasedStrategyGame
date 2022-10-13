@@ -31,5 +31,17 @@ namespace _Scripts._Actions
         {
             return 1;
         }
+
+        protected void ActionStart(Action onActionComplete)
+        {
+            IsActive = true;
+            this.onActionComplete = onActionComplete;
+        }
+
+        protected void ActionComplete()
+        {
+            IsActive = false;
+            onActionComplete();
+        }
     }
 }
