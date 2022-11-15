@@ -20,6 +20,8 @@ public class ShootAction : BaseAction
     private Unit _targetUnit;
     private bool _canShootBullet;
 
+    public event EventHandler OnShoot;
+
     private void Update()
     {
         if (!IsActive)
@@ -36,6 +38,7 @@ public class ShootAction : BaseAction
                 float rotateSpeed = 10f;
                 transform.forward = Vector3.Slerp(transform.forward, aimDirection, Time.deltaTime * rotateSpeed);
                 break;
+            
             case State.Shooting:
                 if (_canShootBullet)
                 {
@@ -43,6 +46,7 @@ public class ShootAction : BaseAction
                     _canShootBullet = false;
                 }
                 break;
+            
             case State.Cooloff:
                 break;
         }
@@ -55,6 +59,7 @@ public class ShootAction : BaseAction
 
     private void Shoot()
     {
+        OnShoot?.Invoke(this, EventArgs.Empty);
         _targetUnit.Damage();
     }
     
@@ -67,11 +72,13 @@ public class ShootAction : BaseAction
                 float shootingStateTime = .1f;
                 _stateTimer = shootingStateTime;
                 break;
+            
             case State.Shooting:
                 _state = State.Cooloff;
                 float coolOffStateTime = .5f;
                 _stateTimer = coolOffStateTime;
                 break;
+            
             case State.Cooloff:
                 ActionComplete();
                 break;
